@@ -940,8 +940,19 @@ class TokenGradCAM:
 
         layer = modules[target_layer_name]
 
-        layer.register_forward_hook(self._save_activation)
-        layer.register_full_backward_hook(self._save_gradient)
+        self._hooks = [
+            layer.register_forward_hook(self._save_activation),
+            layer.register_full_backward_hook(self._save_gradient),
+        ]
+
+    def close(self):
+        """Release temporary hooks and gradients on the shared cached ViT."""
+        for hook in self._hooks:
+            hook.remove()
+        self._hooks.clear()
+        self.activations = None
+        self.gradients = None
+        self.model.zero_grad(set_to_none=True)
 
     def _save_activation(self, module, inp, out):
         self.activations = out.detach()
@@ -1241,6 +1252,7 @@ def run_inference(
 
         return
 
+    cam = None
     try:
 
         cam_input = (
@@ -1308,6 +1320,10 @@ def run_inference(
         st.caption(
             f"Grad-CAM unavailable for this run: {e}"
         )
+
+    finally:
+        if isinstance(cam, TokenGradCAM):
+            cam.close()
 
 
 # ============================================================

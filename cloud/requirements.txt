@@ -1,0 +1,11 @@
+# Inference only. Community Cloud reads this file beside cloud/streamlit_app.py
+# instead of the training requirements.txt at the repository root.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.0+cpu
+torchvision==0.29.0+cpu
+timm==1.0.30
+streamlit==1.64.0
+numpy==2.5.3
+Pillow==12.3.0
+PyYAML==6.0.3
+opencv-python-headless==4.11.0.86
