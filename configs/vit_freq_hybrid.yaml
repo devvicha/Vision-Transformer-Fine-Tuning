@@ -1,0 +1,33 @@
+# Optional ablation. Freeze its inclusion BEFORE inspecting either test set.
+model_name: vit_freq_hybrid
+module: models.vit.model
+run_name: vit_fft_wish_s42_v1
+seed: 42
+device: auto
+data:
+  root: data/raw/wish
+  manifest: data/manifests/wish_v1/manifest.csv
+  near_duplicate_review: null
+  batch_size: 16
+  num_workers: 2
+model:
+  backbone: vit_base_patch16_224.augreg_in21k_ft_in1k
+  pretrained: true
+  num_classes: 1
+  dropout: 0.1
+  use_frequency_hybrid: true
+  freq_branch:
+    conv_channels: [16, 32, 64]
+    fusion_dim: 128
+train:
+  epochs: 30
+  early_stopping_patience: 6
+  optimizer: adamw
+  lr: 0.00003
+  weight_decay: 0.01
+  warmup_steps_pct: 0.1
+  effective_batch_size: 32
+  grad_clip_norm: 1.0
+  mixed_precision: true
+output:
+  results_dir: results/vit
