@@ -77,3 +77,7 @@ Thumbs.db
 # ---------- Ignore everything in results (defense in depth) --
 # Optional: uncomment the next line only if you want results/ fully ignored.
 # results/
+
+# ---------- Local AI agent configuration ---------------------
+.agents/
+.claude/
